@@ -1,6 +1,6 @@
 {
   "name": "Westfalenwind - WWS Plus Smart",
   "content_in_root": false,
-  "filename": "wws_tarifdynamik.zip",
-  "zip_release": true
+  "zip_release": false,
+   "render_readme": true
 }
