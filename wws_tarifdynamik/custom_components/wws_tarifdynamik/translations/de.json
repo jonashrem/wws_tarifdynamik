@@ -1,0 +1,57 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "WestfalenWIND Tarifdynamik",
+        "description": "Gib deine Zugangsdaten für die WestfalenWIND/EnergieDock App ein.",
+        "data": {
+          "username": "E-Mail-Adresse",
+          "password": "Passwort",
+          "price_smart": "SMART-Preis (ct/kWh)",
+          "price_standard": "STANDARD-Preis (ct/kWh)",
+          "saving_window_hours": "Sparfenster-Länge (Stunden)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Verbindung fehlgeschlagen",
+      "invalid_auth": "Ungültige Zugangsdaten",
+      "unknown": "Unbekannter Fehler"
+    },
+    "abort": {
+      "already_configured": "Dieses Konto ist bereits konfiguriert"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Preise anpassen",
+        "description": "Passe deine Tarifpreise an (siehe Vertrag/App).",
+        "data": {
+          "price_smart": "SMART-Preis (ct/kWh)",
+          "price_standard": "STANDARD-Preis (ct/kWh)",
+          "saving_window_hours": "Sparfenster-Länge (Stunden)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "current_price": {
+        "name": "Strompreis Aktuell"
+      },
+      "price_mode": {
+        "name": "Tarifmodus"
+      },
+      "next_price": {
+        "name": "Strompreis Nächste Periode"
+      },
+      "saving_window": {
+        "name": "Bestes Sparfenster"
+      },
+      "is_smart": {
+        "name": "Smart-Tarif Aktiv"
+      }
+    }
+  }
+}

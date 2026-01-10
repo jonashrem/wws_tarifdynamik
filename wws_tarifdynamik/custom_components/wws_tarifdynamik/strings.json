@@ -1,0 +1,38 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "WestfalenWIND Tarifdynamik",
+        "description": "Enter your credentials for the WestfalenWIND/EnergieDock app.",
+        "data": {
+          "username": "Email address",
+          "password": "Password",
+          "price_smart": "SMART price (ct/kWh)",
+          "price_standard": "STANDARD price (ct/kWh)",
+          "saving_window_hours": "Saving window length (hours)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect",
+      "invalid_auth": "Invalid credentials",
+      "unknown": "Unknown error"
+    },
+    "abort": {
+      "already_configured": "This account is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Adjust prices",
+        "description": "Adjust your tariff prices (see contract/app).",
+        "data": {
+          "price_smart": "SMART price (ct/kWh)",
+          "price_standard": "STANDARD price (ct/kWh)",
+          "saving_window_hours": "Saving window length (hours)"
+        }
+      }
+    }
+  }
+}
