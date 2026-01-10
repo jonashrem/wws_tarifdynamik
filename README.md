@@ -1,88 +1,94 @@
 # WestfalenWIND Tarifdynamik - Home Assistant Integration
 
-Diese Custom Integration ermöglicht es, die dynamischen Strompreise von WestfalenWIND / EnergieDock in Home Assistant zu integrieren.
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
+
+🇩🇪 [Deutsche Version](README_DE.md)
+
+This custom integration allows you to integrate dynamic electricity prices from WestfalenWIND / EnergieDock into Home Assistant.
 
 ## Features
 
-- **Aktueller Strompreis**: Zeigt den aktuellen Preis in ct/kWh
-- **Tarifmodus**: Zeigt ob gerade SMART (günstig) oder STANDARD aktiv ist
-- **Nächster Preis**: Preis der nächsten 15-Minuten-Periode
-- **Bestes Sparfenster**: Zeigt das günstigste 2-Stunden-Fenster des Tages
-- **Smart-Tarif Aktiv**: Einfacher Indikator ob gerade der günstige Tarif läuft
-- **Alle Preise als Attribute**: Für Automationen und Graphen
-- **Konfigurierbare Preise**: SMART- und STANDARD-Preise können individuell eingestellt werden
+- **Current Electricity Price**: Shows the current price in ct/kWh
+- **Tariff Mode**: Shows whether SMART (cheap) or STANDARD is currently active
+- **Next Price**: Price for the next 15-minute period
+- **Best Saving Window**: Shows the cheapest time window of the day (configurable length, default: 2 hours)
+- **Smart Tariff Active**: Simple indicator whether the cheap tariff is active
+- **All Prices as Attributes**: For automations and graphs
+- **Configurable Prices**: SMART and STANDARD prices can be individually configured
+- **Configurable Saving Window**: Length of the saving window can be adjusted (1-24 hours)
 
 ## Installation
 
-### Manuell
+### Manual
 
-1. Kopiere den Ordner `custom_components/wws_tarifdynamik` in dein Home Assistant `config/custom_components/` Verzeichnis
+1. Copy the folder `custom_components/wws_tarifdynamik` to your Home Assistant `config/custom_components/` directory
 
-2. Starte Home Assistant neu
+2. Restart Home Assistant
 
-3. Gehe zu **Einstellungen** → **Geräte & Dienste** → **Integration hinzufügen**
+3. Go to **Settings** → **Devices & Services** → **Add Integration**
 
-4. Suche nach "WestfalenWIND Tarifdynamik"
+4. Search for "WestfalenWIND Tarifdynamik"
 
-5. Gib deine Zugangsdaten ein (die gleichen wie in der App)
+5. Enter your credentials (same as in the app)
 
-6. Gib deine Tarifpreise ein:
-   - **SMART-Preis**: Der günstige Preis (z.B. 19,96 ct/kWh)
-   - **STANDARD-Preis**: Der normale Preis (z.B. 29,96 ct/kWh)
+6. Enter your tariff prices:
+   - **SMART Price**: The cheap price (e.g., 19.96 ct/kWh)
+   - **STANDARD Price**: The normal price (e.g., 29.96 ct/kWh)
+   - **Saving Window Length**: Duration in hours (default: 2)
    
-   Die Preise findest du in deinem Vertrag oder in der App.
+   You can find the prices in your contract or in the app.
 
-### Preise nachträglich ändern
+### Adjust Settings Later
 
-Du kannst die Preise jederzeit anpassen:
+You can adjust prices and saving window anytime:
 
-1. **Einstellungen** → **Geräte & Dienste**
-2. Klicke auf "WestfalenWIND Tarifdynamik"
-3. Klicke auf **Konfigurieren**
-4. Passe die Preise an
+1. **Settings** → **Devices & Services**
+2. Click on "WestfalenWIND Tarifdynamik"
+3. Click on **Configure**
+4. Adjust the settings
 
-### HACS (empfohlen)
+### HACS (recommended)
 
-*Noch nicht verfügbar - kann als Custom Repository hinzugefügt werden*
+*Not yet available - can be added as a Custom Repository*
 
-## Sensoren
+## Sensors
 
-| Sensor | Beschreibung | Beispielwert |
-|--------|--------------|--------------|
-| `strompreis_aktuell` | Aktueller Strompreis | 19,96 ct/kWh |
-| `tarifmodus` | SMART oder STANDARD | SMART |
-| `strompreis_nachste_periode` | Preis der nächsten 15 Min | 29,96 ct/kWh |
-| `bestes_sparfenster` | Startzeit des günstigsten 2h-Fensters | 03:00 |
-| `smart_tarif_aktiv` | Ja/Nein | Ja |
-| `preise_heute` | Übersicht aller Preise heute | 96 Perioden, 12 SMART |
-| `preise_morgen` | Übersicht aller Preise morgen | 96 Perioden, 8 SMART |
-| `nachste_smart_periode` | Wann startet nächste SMART-Zeit | 14:00 |
-| `smart_zeiten_heute` | Alle SMART-Zeiträume heute | 03-05, 14-16 Uhr |
+| Sensor | Description | Example Value |
+|--------|-------------|---------------|
+| `strompreis_aktuell` | Current electricity price | 19.96 ct/kWh |
+| `tarifmodus` | SMART or STANDARD | SMART |
+| `strompreis_nachste_periode` | Price for next 15 min | 29.96 ct/kWh |
+| `bestes_sparfenster` | Start time of cheapest window | 03:00 |
+| `smart_tarif_aktiv` | Yes/No | Yes |
+| `preise_heute` | Overview of all prices today | 96 periods, 12 SMART |
+| `preise_morgen` | Overview of all prices tomorrow | 96 periods, 8 SMART |
+| `nachste_smart_periode` | When next SMART time starts | 14:00 |
+| `smart_zeiten_heute` | All SMART time ranges today | 03-05, 14-16 |
 
-## Attribute
+## Attributes
 
 ### `preise_heute` / `preise_morgen`
-- `prices`: Liste aller 15-Min-Perioden mit Preis und Modus
-- `hourly`: Stündliche Übersicht für einfache Visualisierung
-- `min_price` / `max_price` / `avg_price`: Statistiken
+- `prices`: List of all 15-min periods with price and mode
+- `hourly`: Hourly overview for easy visualization
+- `min_price` / `max_price` / `avg_price`: Statistics
 
 ### `nachste_smart_periode`
-- `start`: Startzeitpunkt
-- `price_ct_kwh`: Preis
-- `time_until`: Zeit bis zum Start (z.B. "2h 15min")
-- `minutes_until`: Minuten bis zum Start (für Automationen)
+- `start`: Start time
+- `price_ct_kwh`: Price
+- `time_until`: Time until start (e.g., "2h 15min")
+- `minutes_until`: Minutes until start (for automations)
 
 ### `smart_zeiten_heute`
-- `smart_periods`: Liste aller SMART-Perioden mit Start/Ende
-- `smart_hours`: Anzahl SMART-Stunden heute
+- `smart_periods`: List of all SMART periods with start/end
+- `smart_hours`: Number of SMART hours today
 
-## Beispiel-Automationen
+## Example Automations
 
-### Benachrichtigung bei Smart-Tarif
+### Notification on Smart Tariff
 
 ```yaml
 automation:
-  - alias: "Benachrichtigung Smart-Tarif"
+  - alias: "Smart Tariff Notification"
     trigger:
       - platform: state
         entity_id: sensor.westfalenwind_stromtarif_tarifmodus
@@ -90,14 +96,14 @@ automation:
     action:
       - service: notify.mobile_app
         data:
-          message: "Jetzt günstig Strom verbrauchen! Preis: {{ states('sensor.westfalenwind_stromtarif_strompreis_aktuell') }} ct/kWh"
+          message: "Cheap electricity now! Price: {{ states('sensor.westfalenwind_stromtarif_strompreis_aktuell') }} ct/kWh"
 ```
 
-### Benachrichtigung 15 Min vor SMART
+### Notification 15 Min Before SMART
 
 ```yaml
 automation:
-  - alias: "Warnung vor SMART-Periode"
+  - alias: "SMART Period Warning"
     trigger:
       - platform: numeric_state
         entity_id: sensor.westfalenwind_stromtarif_nachste_smart_periode
@@ -109,27 +115,27 @@ automation:
     action:
       - service: notify.mobile_app
         data:
-          message: "SMART-Tarif startet in {{ state_attr('sensor.westfalenwind_stromtarif_nachste_smart_periode', 'time_until') }}!"
+          message: "SMART tariff starts in {{ state_attr('sensor.westfalenwind_stromtarif_nachste_smart_periode', 'time_until') }}!"
 ```
 
-### Wallbox bei günstigem Strom einschalten
+### Enable EV Charger on Cheap Electricity
 
 ```yaml
 automation:
-  - alias: "Wallbox bei Smart-Tarif"
+  - alias: "Wallbox on Smart Tariff"
     trigger:
       - platform: state
         entity_id: sensor.westfalenwind_stromtarif_smart_tarif_aktiv
         to: "Ja"
     condition:
       - condition: state
-        entity_id: binary_sensor.auto_angeschlossen
+        entity_id: binary_sensor.car_connected
         state: "on"
     action:
       - service: switch.turn_on
         entity_id: switch.wallbox
   
-  - alias: "Wallbox bei Standard-Tarif ausschalten"
+  - alias: "Wallbox off on Standard Tariff"
     trigger:
       - platform: state
         entity_id: sensor.westfalenwind_stromtarif_smart_tarif_aktiv
@@ -139,53 +145,53 @@ automation:
         entity_id: switch.wallbox
 ```
 
-### Waschmaschine zum Sparfenster starten
+### Start Washing Machine at Saving Window
 
 ```yaml
 automation:
-  - alias: "Waschmaschine zum Sparfenster"
+  - alias: "Washing Machine at Saving Window"
     trigger:
       - platform: template
         value_template: >
           {{ now().strftime('%H:%M') == states('sensor.westfalenwind_stromtarif_bestes_sparfenster') }}
     condition:
       - condition: state
-        entity_id: input_boolean.waschmaschine_geplant
+        entity_id: input_boolean.washing_scheduled
         state: "on"
     action:
       - service: switch.turn_on
-        entity_id: switch.waschmaschine
+        entity_id: switch.washing_machine
       - service: input_boolean.turn_off
-        entity_id: input_boolean.waschmaschine_geplant
+        entity_id: input_boolean.washing_scheduled
 ```
 
-### Tägliche Zusammenfassung
+### Daily Summary
 
 ```yaml
 automation:
-  - alias: "Tägliche Strompreis-Zusammenfassung"
+  - alias: "Daily Electricity Price Summary"
     trigger:
       - platform: time
         at: "07:00:00"
     action:
       - service: notify.mobile_app
         data:
-          title: "Strompreise heute"
+          title: "Electricity Prices Today"
           message: >
-            SMART-Zeiten: {{ states('sensor.westfalenwind_stromtarif_smart_zeiten_heute') }}
-            Bestes Fenster: {{ states('sensor.westfalenwind_stromtarif_bestes_sparfenster') }} Uhr
+            SMART times: {{ states('sensor.westfalenwind_stromtarif_smart_zeiten_heute') }}
+            Best window: {{ states('sensor.westfalenwind_stromtarif_bestes_sparfenster') }}
             (Ø {{ state_attr('sensor.westfalenwind_stromtarif_bestes_sparfenster', 'avg_price_ct_kwh') }} ct/kWh)
 ```
 
-## ApexCharts Karte
+## ApexCharts Card
 
-Mit der [ApexCharts Card](https://github.com/RomRider/apexcharts-card) kannst du einen schönen Preisgraphen erstellen:
+With the [ApexCharts Card](https://github.com/RomRider/apexcharts-card) you can create a nice price graph:
 
 ```yaml
 type: custom:apexcharts-card
 header:
   show: true
-  title: Strompreise Heute
+  title: Electricity Prices Today
 graph_span: 24h
 span:
   start: day
@@ -206,19 +212,19 @@ series:
       }
 ```
 
-### Kombinierter Graph (Heute + Morgen)
+### Combined Graph (Today + Tomorrow)
 
 ```yaml
 type: custom:apexcharts-card
 header:
   show: true
-  title: Strompreise 48h
+  title: Electricity Prices 48h
 graph_span: 48h
 span:
   start: day
 series:
   - entity: sensor.westfalenwind_stromtarif_preise_heute
-    name: Heute
+    name: Today
     data_generator: |
       return (entity.attributes.prices || []).map(p => 
         [new Date(p.valid_from).getTime(), p.price_ct_kwh]
@@ -226,7 +232,7 @@ series:
     type: area
     color: '#2196F3'
   - entity: sensor.westfalenwind_stromtarif_preise_morgen
-    name: Morgen
+    name: Tomorrow
     data_generator: |
       return (entity.attributes.prices || []).map(p => 
         [new Date(p.valid_from).getTime(), p.price_ct_kwh]
@@ -237,23 +243,29 @@ series:
 
 ## Troubleshooting
 
-### Token läuft ab
-Die Integration erneuert den Token automatisch. Falls Probleme auftreten, entferne die Integration und füge sie neu hinzu.
+### Token Expires
+The integration automatically renews the token. If problems occur, remove the integration and add it again.
 
-### Keine Daten
-Stelle sicher, dass dein Vertrag aktiv ist und du dich in der App einloggen kannst.
+### No Data
+Make sure your contract is active and you can log in to the app.
 
-## API Dokumentation
+## API Documentation
 
-Die Integration nutzt die inoffizielle API von EnergieDock:
+The integration uses the unofficial EnergieDock API. Detailed API documentation can be found at [docs/API.md](docs/API.md).
 
-- Basis-URL: `https://api.wws.tarifdynamik.de`
+**Quick overview:**
+
+- Base URL: `https://api.wws.tarifdynamik.de`
 - Auth: OAuth2 Password Grant
 - Endpoints:
   - `/tokens/` - Login
-  - `/tariffs/prognosis` - Preisprognose
-  - `/tariffs/periods/saving_window` - Bestes Sparfenster
+  - `/tariffs/prognosis` - Price prognosis
+  - `/tariffs/periods/saving_window` - Best saving window
+
+## 🤖 AI-Generated Project
+
+This project was created with the help of **GitHub Copilot (Claude)**. The code, documentation, and automation examples were AI-generated and reviewed by the developer.
 
 ## Disclaimer
 
-Dies ist eine inoffizielle Integration und steht in keiner Verbindung zu WestfalenWIND oder EnergieDock. Die Nutzung erfolgt auf eigene Verantwortung.
+This is an unofficial integration and is not affiliated with WestfalenWIND or EnergieDock. Use at your own risk.
