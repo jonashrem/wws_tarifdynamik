@@ -9,7 +9,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import WWSTarifdynamikApi, WWSTarifdynamikApiError
-from .const import DOMAIN, DEFAULT_SCAN_INTERVAL, DEFAULT_PRICE_SMART, DEFAULT_PRICE_STANDARD, DEFAULT_SAVING_WINDOW_HOURS
+from .const import DOMAIN, DEFAULT_PRICE_SMART, DEFAULT_PRICE_STANDARD, DEFAULT_SAVING_WINDOW_HOURS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -30,12 +30,43 @@ class WWSTarifdynamikCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             hass,
             _LOGGER,
             name=DOMAIN,
-            update_interval=timedelta(seconds=DEFAULT_SCAN_INTERVAL),
+            update_interval=self._calculate_next_update_interval(),
         )
         self.api = api
         self.price_smart = price_smart
         self.price_standard = price_standard
         self.saving_window_hours = saving_window_hours
+
+    @staticmethod
+    def _calculate_next_update_interval() -> timedelta:
+        """Calculate time until the next 15-minute boundary + 50 seconds.
+
+        Updates are aligned to HH:00:50, HH:15:50, HH:30:50, HH:45:50
+        to match WestfalenWIND's 15-minute tariff change schedule.
+        """
+        now = datetime.now()
+        current_minute = now.minute
+        # Find the next quarter-hour mark (0, 15, 30, 45)
+        next_quarter = ((current_minute // 15) + 1) * 15
+
+        if next_quarter >= 60:
+            next_time = now.replace(minute=0, second=50, microsecond=0) + timedelta(hours=1)
+        else:
+            next_time = now.replace(minute=next_quarter, second=50, microsecond=0)
+
+        delta = next_time - now
+
+        # Safety: if we're very close or past the target, skip to next quarter
+        if delta.total_seconds() <= 5:
+            next_time += timedelta(minutes=15)
+            delta = next_time - now
+
+        _LOGGER.debug(
+            "Next update scheduled in %s (at %s)",
+            delta,
+            next_time.strftime("%H:%M:%S"),
+        )
+        return delta
 
     def _get_actual_price(self, tariff_name: str) -> float:
         """Convert API tariff name to actual configured price."""
@@ -120,7 +151,13 @@ class WWSTarifdynamikCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             }
             
             _LOGGER.debug("Updated WWS data: current=%s", current_price)
+
+            # Recalculate interval so the next update aligns to the clock
+            self.update_interval = self._calculate_next_update_interval()
+
             return result
             
         except WWSTarifdynamikApiError as err:
+            # Still realign on error so we retry at the next quarter hour
+            self.update_interval = self._calculate_next_update_interval()
             raise UpdateFailed(f"Error fetching data: {err}") from err
